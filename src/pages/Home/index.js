@@ -3,26 +3,35 @@ import {BlogItem, Button, Gap} from '../../components'
 import './home.scss'
 import {useNavigate} from 'react-router-dom';
 import Axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Home = () => {
-  const [dataBlog, setDataBlog] = useState([]);
+  const [dataBlog, setDataBlog] = useState([]); // state old not global
   // pemanggilan state global redux
-  const stateGlobal = useSelector(state => state);
-  console.log('stateG: ', stateGlobal);
+  // const stateGlobal = useSelector(state => state);
+  const {dataBlogs, name} = useSelector(state => state); // destructuring state global
+  const dispatch = useDispatch();  
+  console.log('state data blog global: ', dataBlogs);
+  console.log('name: ', name);
 
   useEffect(() => {
+
+    setTimeout(() => {
+        dispatch({type: 'UPDATE_NAME'})
+    }, 1000);
+
     Axios.get('http://localhost:4000/v1/blog/posts?page=2&perPage=2')
     .then(result => {
       console.log('Data Api: ', result);
       const responseAPI = result.data;
 
       setDataBlog(responseAPI.data);
+      dispatch({type: 'UPDATE_DATA_BLOG', payload: responseAPI.data})
     })
     .catch(err => {
       console.log('error: ', err);
     })            
-  }, []);
+  }, [dispatch]);
   
   const navigate = useNavigate();
 
@@ -31,9 +40,10 @@ const Home = () => {
       <div className='create-wrapper'>
         <Button title='create blog' onClick={() => navigate('/create-blog')} />
       </div>
+      <p>{name}</p>
       <Gap height={20} />
       <div className='content-wrapper'>
-        {dataBlog.map(blog => {
+        {dataBlogs.map(blog => {
             return (
               <BlogItem 
                 key={blog._id} 
