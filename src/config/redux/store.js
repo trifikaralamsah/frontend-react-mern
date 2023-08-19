@@ -1,32 +1,9 @@
-import { type } from "@testing-library/user-event/dist/type";
 import { createStore } from "redux";
+import reducer from "./reducer/reducer";
+import { applyMiddleware } from "redux";
+import thunk from "redux-thunk";
 
-const initialState = {
-    dataBlogs: [],
-    name: 'Fikar',
-}
-
-// reducer
-// dgn action dapat merubah value global yg kita miliki
-const reducer = (state = initialState, action) => { 
-    if(action.type === 'UPDATE_DATA_BLOG'){
-        return {
-            ...state, // spread operator
-            dataBlogs: action.payload
-        }
-    }
-    if(action.type === 'UPDATE_NAME'){
-        return {
-            ...state,
-            name: 'Rakif'
-        }
-    }
-
-    return state;
-}
-
-// store
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(thunk));
 
 export default store;
 
@@ -45,3 +22,5 @@ export default store;
 // 3. pada halaman yg ingin menggunakan state global kirim dgn menggunakan dispatch
 // 4. param dari dispatch yaitu type dan payload, yg type nya nama type yg dibuat direducer, dan payloadnya data dari api
 // 5. terakhir jgn lupa taruh di useffet [dispatch] untuk melihat setiap perubahan
+
+// redux thunk untuk async store redux
