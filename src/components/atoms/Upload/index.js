@@ -1,12 +1,12 @@
 import React from 'react'
 import './upload.scss'
-import { registerBg } from '../../../assets'
 
-const Upload = () => {
+const Upload = ({img, ...rest}) => {
+  // jika img ada, maka munculkan image, line 9
   return (
     <div className='upload'>
-        <img className='preview' src={registerBg} alt='preview' />
-        <input type='file' />
+        {img && <img className='preview' src={img} alt='preview' />} 
+        <input type='file' {...rest} />
     </div>
   )
 }
