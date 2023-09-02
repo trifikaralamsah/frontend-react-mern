@@ -4,6 +4,7 @@ const initialHomeState = {
         currentPage: 1,
         totalPage: 1,
     },
+    requestTook : 0,
 }
 
 const homeReducer = (state = initialHomeState, action) => {
@@ -19,6 +20,13 @@ const homeReducer = (state = initialHomeState, action) => {
         return{
             ...state,
             page: action.payload
+        }
+    }
+
+    if(action.type === 'UPDATE_TIME_HIT_API') {
+        return{
+            ...state,
+            requestTook: action.payload
         }
     }
 

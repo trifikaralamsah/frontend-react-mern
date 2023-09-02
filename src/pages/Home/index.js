@@ -14,7 +14,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
-  console.log('page: ', counterPage);
+  console.log('page: ', page.currentPage);
 
   useEffect(() => {
     dispatch(setDataBlog(counterPage))
@@ -25,7 +25,7 @@ const Home = () => {
     // setTimeout(() => {
     //     dispatch({type: 'UPDATE_NAME'})
     // }, 1000);            
-  }, [dispatch, dataBlog, counterPage]);
+  }, [dispatch, counterPage]);
 
   const navigate = useNavigate();
 
@@ -69,6 +69,7 @@ const Home = () => {
                 name={blog.author.name}
                 date={blog.updatedAt}
                 body={blog.body}
+                _id={blog._id}
               />
               )
           })}

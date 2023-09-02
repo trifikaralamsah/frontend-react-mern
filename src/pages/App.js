@@ -1,7 +1,6 @@
 import React from "react";
-import RoutesDom from "../config/Routes";
 import { Provider } from "react-redux";
-import { store } from "../config";
+import { store, RoutesDom } from "../config";
 
 function App() {
   // const a = store.subscribe(() => {
