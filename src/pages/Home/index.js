@@ -4,6 +4,9 @@ import './home.scss'
 import {useNavigate} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDataBlog } from '../../config/redux/action';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import Axios from 'axios';
 
 const Home = () => {
   // const [dataBlogs, setDataBlogs] = useState([]); // state old not global
@@ -15,6 +18,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   console.log('page: ', page.currentPage);
+  console.log('counter: ', counterPage);
 
   useEffect(() => {
     dispatch(setDataBlog(counterPage))
@@ -45,6 +49,41 @@ const Home = () => {
     // setCounterPage(counterPage === page.totalPage ? page.totalPage : counterPage + 1);
   }
 
+  const apiDelete = (_id) => {
+    setLoading(true);
+    Axios.delete(`http://localhost:4000/v1/blog/post/${_id}`)
+    .then(res => {
+      console.log('success delete', res.data);
+      if(dataBlog.length === 1) {
+        setCounterPage(counterPage - 1)
+        dispatch(setDataBlog(counterPage - 1));
+      } else {
+        dispatch(setDataBlog(counterPage));
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 100);
+    })
+    .catch(err => console.log('error:', err));
+  }
+
+  const confirmDelete = (_id) => {
+    confirmAlert({
+      title: 'Confirm to Delete',
+      message: 'Apakah anda yakin akan menghapus data ini?',
+      buttons: [
+        {
+          label: 'Ya',
+          onClick: () => apiDelete(_id)
+        },
+        {
+          label: 'Tidak',
+          onClick: () => console.log('Click No Delete')
+        }
+      ]
+    });
+  }
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -70,6 +109,7 @@ const Home = () => {
                 date={blog.updatedAt}
                 body={blog.body}
                 _id={blog._id}
+                onDelete={confirmDelete}
               />
               )
           })}
